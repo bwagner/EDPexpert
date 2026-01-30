@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="EDPexpert" default="create_run_jar" basedir=".">
+    <!--
+      Incremental build + runnable “fat jar”.
+
+      Targets:
+        ant compile          # incremental compile (no clean)
+        ant create_run_jar   # compile (incremental) + build fat jar
+        ant run              # build jar + run it (args via -Dapp.args=...)
+        ant clean            # delete bin/ and jar
+        ant rebuild          # clean + build jar
+
+      Run example:
+        ant run -Dapp.args="&quot;IAC Driver Bus 1&quot; &quot;IAC Driver Bus 1&quot;"
+    -->
+
+    <!-- ===== project layout ===== -->
+    <property name="dir.project" value="${basedir}"/>
+    <property name="dir.src" value="${dir.project}/src"/>
+    <property name="dir.bin" value="${dir.project}/bin"/>
+		<property name="dir.dist" value="${dir.project}/dist"/>
+    <property name="dir.lib" value="${dir.project}/lib"/>
+
+    <!-- resources folder (will be packaged into jar under resources/**) -->
+    <property name="dir.resources" value="${dir.project}/resources"/>
+
+    <!-- output jar location -->
+		<property name="dir.jarfile" value="${dir.dist}"/>
+    <property name="jar.name" value="edpexpert.jar"/>
+    <property name="jar.dest" value="${dir.jarfile}/${jar.name}"/>
+
+    <!-- main class (use fully-qualified name if Main is in a package) -->
+    <property name="main.class" value="Main"/>
+
+    <!-- ===== targets ===== -->
+
+    <target name="clean" description="Delete compiled classes and jar">
+        <delete dir="${dir.bin}"/>
+				<delete dir="${dir.dist}"/>
+        <delete file="${jar.dest}"/>
+    </target>
+
+    <target name="compile" description="Compile Java sources into bin/ (incremental)">
+        <mkdir dir="${dir.bin}"/>
+
+        <javac
+            srcdir="${dir.src}"
+            destdir="${dir.bin}"
+            includeantruntime="false"
+            debug="true"
+            encoding="UTF-8"
+            fork="true"
+        >
+            <classpath>
+                <fileset dir="${dir.lib}" includes="*.jar"/>
+            </classpath>
+        </javac>
+
+        <!-- If you keep non-Java files under src/, copy them too -->
+        <copy todir="${dir.bin}">
+            <fileset dir="${dir.src}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+    <target name="create_run_jar" depends="compile" description="Create runnable fat jar (classes + resources + libs)">
+        <mkdir dir="${dir.jarfile}"/>
+
+        <jar destfile="${jar.dest}" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+                <!-- Fat jar: classpath usually unnecessary, keep simple -->
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+
+            <!-- compiled classes -->
+            <fileset dir="${dir.bin}"/>
+
+            <!-- resources included as resources/** inside the jar -->
+            <fileset dir="${dir.project}" includes="resources/**"/>
+
+            <!-- Unzip all dependency jars into the fat jar -->
+            <zipgroupfileset dir="${dir.lib}" includes="*.jar"/>
+        </jar>
+
+        <echo message="Created ${jar.dest}"/>
+    </target>
+
+    <target name="run" depends="create_run_jar" description="Build the runnable jar and run it (args via ant run -Dapp.args=&quot;&#x5C;&quot;IAC Driver Bus 1&#x5C;&quot; &#x5C;&quot;IAC Driver Bus 1&#x5C;&quot;&quot;)">
+        
+        <java jar="${jar.dest}" fork="true" failonerror="true">
+            <arg line="${app.args}"/>
+        </java>
+    </target>
+
+    <target name="rebuild" depends="clean,create_run_jar" description="Clean + build jar"/>
+</project>
+
