@@ -176,7 +176,14 @@ public class Main {
 							// "01 02 7F" // from length pset (= 7F = currently
 							// selected Preset manual says) // crashes EDP!
 							// "10 03 01" // from length (max. 0x13 = 19) pset
-							));
+							)).addCommand("k", new AbstractCommand("list MIDI devices") {
+
+								@Override
+								public void doIt() {
+									System.out.println("list midi devs before");
+									MidiDevices.listOutputDevices();
+									System.out.println("list midi devs after");
+								}});
 			interactive.enterLoop();
 		} finally {
 			terminate(mr, midiDeviceAndReceiver);

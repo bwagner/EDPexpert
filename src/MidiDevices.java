@@ -1,3 +1,4 @@
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -270,18 +271,20 @@ public class MidiDevices {
 	 */
 	public static void listOutputDevices() {
 		LOGGER.info("Outputs:");
+		System.out.println("Outputs:");
 		if (fgOutputs.size() == 0)
 			probe(false);
 		final Iterator<String> oit = fgOutputs.iterator();
 		while (oit.hasNext()) {
 			final String next = oit.next();
 			LOGGER.info(next);
+			System.out.println(next);
 		}
 	}
 
 	private static List<String> fgOutputs = new ArrayList<String>();
 	private static List<String> fgInputs = new ArrayList<String>();
 	
-	private static final Logger LOGGER = LogManager.getLogger(MidiDevices.class);
+	private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
 }
