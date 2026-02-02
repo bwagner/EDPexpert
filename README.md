@@ -17,7 +17,7 @@ All dependencies are included in `lib/`:
 - **coremidi4j-1.6.jar** - CoreMIDI wrapper (required for SysEx on macOS)
 - **log4j-api-2.25.3.jar** - Logging framework API
 - **log4j-core-2.25.3.jar** - Logging framework implementation
-- **junit.jar** - Unit testing framework
+- **junit-platform-console-standalone-6.0.2.jar** - Unit testing framework
 
 ## Building
 
