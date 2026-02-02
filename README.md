@@ -74,7 +74,7 @@ ant run -Dapp.args="\"Bus 1\" \"Bus 1\""
 
 ### Why CoreMIDI4J?
 
-Java's built-in MIDI on macOS has a long-standing bug where SysEx messages are sent as Note On messages instead. CoreMIDI4J wraps the native CoreMIDI API to fix this issue.
+Java's built-in MIDI on macOS has a long-standing bug ([JDK-8013365](https://bugs.openjdk.org/browse/JDK-8013365), filed 2013, still unresolved) where SysEx messages are incorrectly sent as Note messages instead of proper System Exclusive data. CoreMIDI4J wraps the native CoreMIDI API to fix this issue.
 
 **Device naming:**
 - Audio MIDI Setup shows: "IAC Driver Bus 1"
