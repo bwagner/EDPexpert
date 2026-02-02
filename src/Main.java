@@ -129,8 +129,10 @@ public class Main {
 								@Override
 								public void doIt() {
 									try {
-								SendSysexCommand.sendSysex("f0 00 01 30 0b 7f 01 12 01 02 7f f7",
+                                        LOGGER.info("About to send SysEx: f0 00 01 30 0b 7f 01 12 01 02 7f f7");
+                                        SendSysexCommand.sendSysex("f0 00 01 30 0b 7f 01 12 01 02 7f f7",
 										midiDeviceAndReceiver.getReceiver());
+                                        LOGGER.info("SysEx sent successfully");
 									} catch (MidiUnavailableException e) {
 										LOGGER.error(Utils.getStackTrace(e));
 									} catch (InvalidMidiDataException e) {
@@ -243,6 +245,14 @@ public class Main {
 
 	static {
 		LOGGER.trace("static section");
+        LOGGER.info("Checking CoreMIDI4J status...");
+        try {
+            Class<?> coreMidiClass = Class.forName("uk.co.xfactorylibrarians.coremidi4j.CoreMidiDeviceProvider");
+            LOGGER.info("CoreMIDI4J class found: " + coreMidiClass);
+        } catch (ClassNotFoundException e) {
+            LOGGER.error("CoreMIDI4J NOT found in classpath!");
+        }
+
 		EDPMidiHandler.instance().addSysexMidiListener(new SysexMidiListener());
 	}
 }

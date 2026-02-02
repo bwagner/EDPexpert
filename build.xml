@@ -11,7 +11,7 @@
         ant rebuild          # clean + build jar
 
       Run example:
-        ant run -Dapp.args="&quot;IAC Driver Bus 1&quot; &quot;IAC Driver Bus 1&quot;"
+        ant run -Dapp.args=&quot;&#x5C;&quot;CoreMIDI4J - IAC Driver&#x5C;&quot; &#x5C;&quot;CoreMIDI4J - IAC Driver&#x5C;&quot;&quot;
     -->
 
     <!-- ===== project layout ===== -->
@@ -97,6 +97,9 @@
             <!-- compiled classes -->
             <fileset dir="${dir.bin}"/>
 
+            <fileset dir="${dir.resources}" includes="log4j2*.xml"/>
+
+
             <!-- resources included as resources/** inside the jar -->
             <fileset dir="${dir.project}" includes="resources/**"/>
 
@@ -107,10 +110,11 @@
         <echo message="Created ${jar.dest}"/>
     </target>
 
-    <target name="run" depends="create_run_jar" description="Build the runnable jar and run it (args via ant run -Dapp.args=&quot;&#x5C;&quot;IAC Driver Bus 1&#x5C;&quot; &#x5C;&quot;IAC Driver Bus 1&#x5C;&quot;&quot;)">
+    <target name="run" depends="create_run_jar" description="Build the runnable jar and run it (args via ant run -Dapp.args=&quot;&#x5C;&quot;CoreMIDI4J - IAC Driver&#x5C;&quot; &#x5C;&quot;CoreMIDI4J - IAC Driver&#x5C;&quot;&quot;)">
         
         <java jar="${jar.dest}" fork="true" failonerror="true">
             <arg line="${app.args}"/>
+            <jvmarg value="--enable-native-access=ALL-UNNAMED"/>
         </java>
     </target>
 
